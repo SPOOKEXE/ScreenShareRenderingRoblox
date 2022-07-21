@@ -1,0 +1,10 @@
+
+-- Data Compression over remotes / localhost
+
+-- Use exploits to make this functional
+-- (LocalHost python code -> screen render to data -> compressed data -> localhost port)
+-- (synapse -> localhost port -> get data -> fire to server remote -> server remote fires all clients)
+-- (all clients render data after uncompressing and such) OR (server renders frames and such)
+
+
+py -m pip install 'module-name'

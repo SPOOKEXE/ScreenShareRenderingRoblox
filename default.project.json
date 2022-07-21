@@ -1,0 +1,32 @@
+{
+	"name": "screenshare-project",
+	"tree": {
+		"$className": "DataModel",
+		"HttpService": {
+			"$className": "HttpService",
+			"$ignoreUnknownInstances": true,
+			"$properties": {
+				"HttpEnabled": true
+			}
+		},
+		"ServerScriptService": {
+			"$className": "ServerScriptService",
+			"$path": "roblox/ServerScriptService",
+			"$ignoreUnknownInstances": true
+		},
+		"ReplicatedStorage": {
+			"$className": "ReplicatedStorage",
+			"$path": "roblox/ReplicatedStorage",
+			"$ignoreUnknownInstances": true
+		},
+		"StarterPlayer": {
+			"$className": "StarterPlayer",
+			"$ignoreUnknownInstances": true,
+			"StarterPlayerScripts": {
+				"$className": "StarterPlayerScripts",
+				"$path": "roblox/StarterPlayerScripts",
+				"$ignoreUnknownInstances": true
+			}
+		}
+	}
+}
