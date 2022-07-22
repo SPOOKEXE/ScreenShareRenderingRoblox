@@ -36,12 +36,12 @@ class Network:
 
 	# On incoming Data
 	def __compileSendData(self):
-		# get latest screenshot
-		screenshot.Update()
 		# return dumped json string w/ data
+		data, _ = screenshot.Get()
+		# TODO: data compression + uncompression
 		return json.dumps({
 			"Timestamp": time.time(),
-			"Data" : str(screenshot.GetRaw())
+			"Data" : str(data)
 		})
 
 	# Setup socket handling
@@ -59,7 +59,7 @@ class Network:
 				conn.sendall('\n'.encode()) # to separate headers from body
 				conn.sendall(str(returnData).encode())
 				print("Close Connection")
-				time.sleep(2)
+				time.sleep(3)
 				conn.close()
 
 	def setup( self ):

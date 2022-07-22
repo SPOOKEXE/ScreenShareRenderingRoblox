@@ -1,4 +1,14 @@
 
+local function CombineArrays(...)
+	local args = {...}
+	local body = {}
+	for _, array in ipairs( args ) do
+		array = table.clone(array) -- clone the table
+		table.move(array, 1, #array, #body, body) -- move it all into one
+	end
+	return body
+end
+
 -- // Class // --
 local Class = {}
 Class.__index = Class
@@ -23,7 +33,9 @@ function Class:SetTemplate(TemplateInstance : Instance)
 end
 
 function Class:CreateFromTemplate()
-	return self.TemplateInstance:Clone()
+	local Template = self.TemplateInstance:Clone()
+	Template.Parent = script
+	return Template
 end
 
 function Class:ReleaseInstance(PassedInstance)
@@ -40,6 +52,13 @@ function Class:ReleaseInstance(PassedInstance)
 	end
 end
 
+function Class:ReleaseAll()
+	for _, _Instance in ipairs( self.__InUseInstances ) do
+		table.insert(self.__CachedInstances, _Instance)
+	end
+	self.__InUseInstances = {}
+end
+
 function Class:GetObject() : Instance
 	assert(typeof(self.TemplateInstance) == 'Instance', 'Assign a template instance with ":SetTemplate(Instance)" before utilising this function.')
 	local ActiveInstance = self.__CachedInstances[1]
@@ -53,18 +72,17 @@ function Class:GetObject() : Instance
 	return ActiveInstance
 end
 
-local function CombineArrays(...)
-	local args = {...}
-	local body = {}
-	for _, array in ipairs( args ) do
-		array = table.clone(array) -- clone the table
-		table.move(array, 1, #array, #body, body) -- move it all into one
-	end
-	return body
-end
-
 function Class:GetInstances()
 	return CombineArrays(self.__InUseInstances, self.__CachedInstances)
+end
+
+function Class:Populate()
+	for i = 1, (self.__MaxCache - #self:GetInstances()), 1 do
+		table.insert(self.__CachedInstances, self:CreateFromTemplate())
+		if (i % 1000) == 0 then
+			task.wait()
+		end
+	end
 end
 
 return Class

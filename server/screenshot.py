@@ -3,30 +3,30 @@ import numpy as np
 import cv2
 import os
 
-from PIL import Image
-from pyautogui import screenshot
+from typing import Tuple
+from PIL import Image, ImageGrab
 
 directory = os.path.dirname(os.path.realpath(__file__)) + "/"
 
-resize_to = (50, 50) # note: keeps screenshot aspect ratio
+#resize_to = (192, 108) # note: keeps screenshot aspect ratio
+resize_to = (640, 360) # note: keeps screenshot aspect ratio
 
-def GetRaw():
-	image = Image.open(directory + "screen.png")
-	image.thumbnail(resize_to, Image.ANTIALIAS)
-	data = str(np.asarray(image).tolist())
+def WriteSampleFile(image, filename):
+	image_matrix = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
+	cv2.imwrite(directory + filename, image_matrix)
+
+def Get() -> Tuple[list, Image.Image]:
+	image = ImageGrab.grab()
+	WriteSampleFile(image, 'screen.png') # default
+	image.thumbnail(resize_to, Image.LANCZOS)
+	WriteSampleFile(image, 'screen_resized.png') # default
+
+	image_matrix = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
+	data = str(np.asarray(image_matrix).tolist())
 	with open(directory + "raw_data.json", "w") as file:
-		file.write(str(data))
-	# return compress(data)
-	return data
-
-def Update():
-	# take screenshot using pyautogui
-	image = screenshot()
-	image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
-	image.resize()
-	cv2.imwrite(directory + "screen.png", image)
+		file.write("".join(data))
+	return data, image
 
 if __name__ == '__main__':
-	Update()
-	ByteData = GetRaw()
-	print(len(ByteData))
+	data, img = Get()
+	print(len(data))

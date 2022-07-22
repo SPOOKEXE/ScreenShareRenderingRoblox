@@ -20,10 +20,12 @@ local ContainerFrame = Instance.new('Frame') do
 	ContainerFrame.AnchorPoint = Vector2.new(0.5, 0.5)
 	ContainerFrame.Position = UDim2.fromScale(0.5, 0.5)
 	ContainerFrame.Parent = ScreenGui
-	Instance.new('UIAspectRatioConstraint', ContainerFrame).AspectRatio = 1 -- keep it square
-	local GridLayout = Instance.new('UIListLayout')
-	GridLayout.SortOrder = Enum.SortOrder.LayoutOrder
-	GridLayout.Parent = ContainerFrame
+end
+
+local AspectRatio = Instance.new('UIAspectRatioConstraint') do
+	AspectRatio.AspectRatio = 1 -- keep it square
+	AspectRatio.AspectType = Enum.AspectType.ScaleWithParentSize
+	AspectRatio.Parent = ContainerFrame
 end
 
 local TemplateLabel = Instance.new('TextLabel') do
@@ -33,22 +35,24 @@ local TemplateLabel = Instance.new('TextLabel') do
 	TemplateLabel.Name = 'PixelLabel'
 	TemplateLabel.Text = ''
 	TemplateLabel.RichText = true
-	TemplateLabel.TextSize = 16
+	TemplateLabel.TextScaled = true
 	TemplateLabel.Font = Enum.Font.SourceSansBold
 	PixelCache:SetTemplate(TemplateLabel)
 end
 
 local BASE_PIXEL_TEXT = '<font color="rgb(%s, %s, %s)">█</font>'
+local PIXELS_PER_LABEL = 80
+
+local PIXEL_TEXT_SIZE_X = 4
+local PIXEL_TEXT_SIZE_Y = 5
 
 -- // Module // --
 local Module = {}
 
 function Module.ProcessData( PixelDataArray )
-
 	local yIndex = 1
 	local xIndex = 1
 	local counter = 0
-
 	local textArray = {}
 	--[[
 		{ -- matrix
@@ -60,16 +64,15 @@ function Module.ProcessData( PixelDataArray )
 			},
 		}
 	]]
-
 	while yIndex <= #PixelDataArray do
 		if counter == 0 then
-			table.insert(textArray, { {} }) -- adds default pixel concat table
+			table.insert(textArray, {}) -- adds default pixel concat table
 		end
-		-- every 25 pixels, create a new label in the same row
+		-- every 'PIXELS_PER_LABEL' pixels, create a new label in the same row
 		local hasRowFinished = (xIndex > #PixelDataArray[yIndex])
-		if (counter % 25 == 0) or hasRowFinished then
+		if (counter % PIXELS_PER_LABEL == 0) or hasRowFinished then
 			if hasRowFinished then
-				print('row finished')
+				--print('row finished')
 				yIndex += 1
 				if yIndex > #PixelDataArray then
 					break
@@ -77,60 +80,54 @@ function Module.ProcessData( PixelDataArray )
 				xIndex = 1
 				table.insert(textArray, { {} }) -- add another row, using default
 			else
+				--print('new concat table')
 				table.insert(textArray[#textArray], {}) -- add another label concat table
 				counter = 0
 			end
 		end
-
 		local currentRowPixelStrData = textArray[#textArray]
 		currentRowPixelStrData = currentRowPixelStrData[#currentRowPixelStrData]
-
 		local r, g, b = unpack(PixelDataArray[yIndex][xIndex])
 		table.insert(currentRowPixelStrData, string.format(BASE_PIXEL_TEXT, r, g, b))
-
 		-- print( counter, yIndex, xIndex, string.format(BASE_PIXEL_TEXT, r, g, b))
-
 		xIndex += 1
 		counter += 1
 	end
-
 	return textArray
 end
 
 function Module.LoadPixels( PixelDataArray )
-	print(typeof(PixelDataArray))
 	print('X: ', #PixelDataArray[1], ' Y:', #PixelDataArray)
 
 	local renderStringMatrix = Module.ProcessData(PixelDataArray)
-	print(renderStringMatrix)
 
-	local resolutionY = #PixelDataArray
 	local resolutionX = #PixelDataArray[1]
+	local resolutionY = #PixelDataArray
 
-	--[[
-		local pixelSize = math.min( ContainerFrame.AbsoluteSize.X / resolutionX, ContainerFrame.AbsoluteSize.Y / resolutionY )
-		pixelSize = math.min(1, math.round(pixelSize))
+	AspectRatio.AspectRatio = (resolutionX / resolutionY)
 
-		-- update template to have correct size (for any new pixels)
-		PixelCache.TemplateInstance.Size = UDim2.fromOffset( pixelSize, pixelSize)
-		-- update all active and cached pixels to have the correct size
-		for _, Label in ipairs( PixelCache:GetInstances() ) do
-			Label.Size = UDim2.fromScale(1, pixelSize / ContainerFrame.AbsoluteSize.X) -- do this for all pixels
-		end
-	]]
+	-- TODO: convert to scale
 
-	local LabelSizeX = ContainerFrame.AbsoluteSize.X / #renderStringMatrix[1]
+	local xPadding = -1
+	local yPadding = -1
 	for rowNumber, rowLabels in ipairs( renderStringMatrix ) do
-
-		for labelNumber, labelStrTable in ipairs( rowLabels ) do
-
+		local xoffset = 0
+		for xindex, labelStrTable in ipairs( rowLabels ) do
+			local LabelSizeX = (PIXEL_TEXT_SIZE_X * #labelStrTable)
 			local pixelString = table.concat(labelStrTable, '')
-
-
-
+			local Label = PixelCache:GetObject()
+			Label.Text = pixelString
+			Label.Size = UDim2.fromOffset(LabelSizeX, PIXEL_TEXT_SIZE_Y)
+			Label.Position = UDim2.fromOffset(
+				(xoffset + ((xindex-1) * xPadding)),
+				(((rowNumber-1) * PIXEL_TEXT_SIZE_Y) + ((rowNumber-1) * yPadding))
+			)
+			Label.Parent = ContainerFrame
+			xoffset += LabelSizeX
 		end
-
 	end
+
+	PixelCache:ReleaseAll()
 
 end
 

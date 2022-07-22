@@ -41,18 +41,24 @@ local function UpdateData()
 	end
 end
 
---[[
--- new thread for it
+--[[ -- new thread for it
 task.defer(function()
 	while true do
-		task.wait(5)
+		task.wait(2)
 		-- new thread so no delay in loop
 		task.defer(UpdateData)
 	end
 end)
 ]]
 
--- manual trigger
+--[[ manual trigger 1 ]]
 local B = Instance.new('BoolValue')
 B.Changed:Connect(UpdateData)
 B.Parent = workspace
+
+--[[ manual trigger 2 ]]
+local R = Instance.new('RemoteEvent')
+R.OnServerEvent:Connect(UpdateData)
+R.Parent = workspace
+
+-- workspace.RemoteEvent:FireServer()
