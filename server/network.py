@@ -6,6 +6,26 @@ import time
 
 import screenshot
 
+# finish_key = '5e100"'
+# def recieve_all(connection):
+# 	data = []
+# 	raw = None
+# 	while 1:
+# 		# recieve
+# 		chunk = connection.recv(512)
+# 		if not chunk:
+# 			break
+# 		chunk : str = chunk.decode('utf-8')
+# 		# append
+# 		data.append(chunk)
+# 		# format data
+# 		raw = "".join(data)
+# 		# check if finished
+# 		index = raw.find(finish_key)
+# 		if index != -1 or chunk == '\n':
+# 			break
+# 	return raw
+
 class Network:
 	ip = None
 	ports = None
@@ -29,6 +49,7 @@ class Network:
 		while True:
 			for sock in self.__sockets:
 				conn, addr = sock.accept()
+				# _ = recieve_all(conn)
 				print("Connection started; ", addr)
 				returnData = self.__compileSendData()
 				response_headers = { 'Content-Type': 'application/json; encoding=utf8', 'Content-Length': len(returnData), 'Connection': 'close' }
@@ -38,6 +59,7 @@ class Network:
 				conn.sendall('\n'.encode()) # to separate headers from body
 				conn.sendall(str(returnData).encode())
 				print("Close Connection")
+				time.sleep(2)
 				conn.close()
 
 	def setup( self ):
@@ -69,3 +91,16 @@ class Network:
 	def __init__( self, ip='127.0.0.1', ports=[] ):
 		self.ip = ip
 		self.ports = ports
+
+if __name__ == '__main__':
+	from time import sleep
+
+	host = Network(ports=[500])
+	host.setup()
+	while True:
+		# allows keyboard exit
+		try:
+			sleep(0.1)
+		except:
+			break
+	host.kill()

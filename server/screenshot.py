@@ -2,7 +2,6 @@
 import numpy as np
 import cv2
 import os
-import zlib
 
 from PIL import Image
 from pyautogui import screenshot
@@ -11,10 +10,11 @@ directory = os.path.dirname(os.path.realpath(__file__)) + "/"
 
 def GetRaw():
 	image = Image.open(directory + "screen.png")
-	data = image.tobytes()
-	#with open(directory + "raw_data.json", "w") as file:
-	#	file.write(str(data))
-	return zlib.compress(data)
+	data = str(np.asarray(image).tolist())
+	with open(directory + "raw_data.json", "w") as file:
+		file.write(str(data))
+	# return compress(data)
+	return data
 
 def Update():
 	# take screenshot using pyautogui

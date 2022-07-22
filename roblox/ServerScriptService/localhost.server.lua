@@ -6,13 +6,22 @@ local RemoteService = require(ReplicatedStorage:WaitForChild('RemoteService'))
 local ReplicateRemote = RemoteService:GetRemote('Replicate', 'RemoteEvent', false) :: RemoteEvent
 
 while true do
-	local success, data = pcall(function()
-		return HttpService:GetAsync('http://127.0.0.1:500')['Data']
+	local data = false
+	local success, err = pcall(function()
+		data = HttpService:RequestAsync({
+			Url = 'http://127.0.0.1:500',
+			Method = 'POST',
+			Headers = {
+				['Content-Type'] = 'application/json'
+			},
+		})['Body']
 	end)
 	if success then
-		ReplicateRemote:FireAllClients(data)
+		ReplicateRemote:FireAllClients( HttpService:JSONDecode(data) )
 	else
-		warn('Could not connect to localhost ; ', data)
+		warn('Could not connect to localhost ; ', err)
 	end
-	task.wait(1)
+	task.wait(15)
 end
+
+
