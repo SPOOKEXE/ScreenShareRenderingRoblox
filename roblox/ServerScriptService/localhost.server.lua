@@ -47,12 +47,12 @@ end
 --[[ -- new thread for it
 task.defer(function()
 	while true do
-		task.wait(0.5)
+		task.wait(1)
 		-- new thread so no delay in loop
 		task.defer(UpdateData)
 	end
-end)
-]]
+end)]]
+
 
 --[[ manual trigger 1]]
 local B = Instance.new('BoolValue')
