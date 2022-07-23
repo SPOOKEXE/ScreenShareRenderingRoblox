@@ -6,7 +6,7 @@ if __name__ == '__main__':
 	host = Network(ports=[500])
 	host.setup()
 	while True:
-		# allows keyboard exit
+		# allows keyboard exiit
 		try:
 			sleep(0.1)
 		except:
