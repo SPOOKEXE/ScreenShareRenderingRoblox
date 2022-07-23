@@ -1,4 +1,5 @@
 
+from curses import resize_term
 import numpy as np
 import cv2
 import os
@@ -8,7 +9,10 @@ from PIL import Image, ImageGrab
 
 directory = os.path.dirname(os.path.realpath(__file__)) + "/"
 
-resize_to = (192, 108) # note: keeps screenshot aspect ratio
+resize_to = (220, 130)# in roblox tv screen
+
+#resize_to = (192, 108) # note: keeps screenshot aspect ratio
+#resize_to = (320, 180)
 #resize_to = (640, 360) # note: keeps screenshot aspect ratio
 #resize_to = (1280, 720)  # note: keeps screenshot aspect ratio
 

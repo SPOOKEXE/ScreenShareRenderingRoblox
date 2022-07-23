@@ -13,7 +13,9 @@ end
 local Module = {}
 
 function Module.Decompress( data : string ) : table
-	local div_num, col_mat, pix_data = unpack(data.split('*'))
+	print(#string.split(data, '*'))
+	local div_num, col_mat, pix_data = unpack(string.split(data, '*'))
+	print(div_num, #col_mat, #pix_data)
 	col_mat = httpDecode(col_mat)
 	pix_data = httpDecode(pix_data)
 	div_num = tonumber(div_num)
@@ -21,8 +23,8 @@ function Module.Decompress( data : string ) : table
 	for _, yData in ipairs( pix_data ) do
 		local row_decompressed = {}
 		for xIndex, pixel_n in ipairs( yData ) do
-			pixel_n = math.floor(yData[xIndex] * div_num) - 1
-			local r, g, b = unpack(col_mat[pixel_n].split("."))
+			pixel_n = math.floor(yData[xIndex] * div_num)
+			local r, g, b = unpack(string.split(col_mat[pixel_n], "."))
 			table.insert(row_decompressed, {tonumber(r), tonumber(g), tonumber(b)})
 		end
 		table.insert(extracted, row_decompressed)

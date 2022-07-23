@@ -5,7 +5,7 @@ import _thread
 import time
 
 import screenshot
-from compression import compress
+from compression import compress_image
 
 # finish_key = '5e100"'
 # def recieve_all(connection):
@@ -39,7 +39,9 @@ class Network:
 	def __compileSendData(self):
 		# return dumped json string w/ data
 		data, _ = screenshot.Get()
-		data = compress(data)
+		print(len(str(data)))
+		data = compress_image(data)
+		print(len(data))
 		# TODO: data compression + uncompression
 		return json.dumps({
 			"Timestamp": time.time(),

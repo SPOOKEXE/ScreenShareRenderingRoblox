@@ -3,8 +3,6 @@ import json
 import os
 
 from math import floor
-
-from numpy import full
 from screenshot import Get
 
 compressed_str = '5*["123.123.123","123.55.123"]*3^3^[0.2, 0.2, 0.2]'

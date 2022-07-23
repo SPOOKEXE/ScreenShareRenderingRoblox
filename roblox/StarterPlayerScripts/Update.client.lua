@@ -1,12 +1,13 @@
 
 local ReplicatedStorage = game:GetService('ReplicatedStorage')
-local HttpService = game:GetService('HttpService')
 
 local CompressionModule = require(ReplicatedStorage:WaitForChild('Compression'))
 local RemoteService = require(ReplicatedStorage:WaitForChild('RemoteService'))
 local ReplicateRemote = RemoteService:GetRemote('Replicate', 'RemoteEvent', false)
 
-local ScreenModule = require(script.Parent:WaitForChild('Render'))
+--local TextLabelModule = require(script.Parent:WaitForChild('Render'))
+--local RenderFramesModule = require(script.Parent.RenderFrames)
+local BoxAdornmentModule = require(script.Parent.RenderBoxAdornments)
 
 local Latest = 0
 ReplicateRemote.OnClientEvent:Connect(function(Data)
@@ -16,7 +17,9 @@ ReplicateRemote.OnClientEvent:Connect(function(Data)
 	end
 	Latest = Data.Timestamp
 	print(#Data.Data)
-	local Uncompressed = CompressionModule.inflate(Data.Data)
-	print(#Uncompressed)
-	--task.defer(ScreenModule.LoadPixels,  Data.Data)
+	local Uncompressed = CompressionModule.Decompress(Data.Data)
+	print(#Uncompressed, type(Uncompressed))
+	--task.defer(TextLabelModule.LoadPixels, Uncompressed)
+	--task.defer(RenderFramesModule.LoadPixels, Uncompressed)
+	task.defer(BoxAdornmentModule.LoadPixels, Uncompressed)
 end)
