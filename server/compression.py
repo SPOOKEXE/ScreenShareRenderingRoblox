@@ -89,10 +89,8 @@ def decompress_image(data : str) -> list:
 	counter = -1
 	for pixel_data in raw_pixel_data:
 		counter += 1
-		print(counter, counter % SIZE_X)
 		if counter == 0 or counter % SIZE_X == 0:
 			fully_sorted.append([])
-		print(counter, len(fully_sorted)-1)
 		fully_sorted[len(fully_sorted)-1].append(pixel_data)
 
 	# DUMP
