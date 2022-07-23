@@ -21,14 +21,14 @@ def WriteSampleFile(image, filename):
 
 def Get() -> Tuple[list, Image.Image]:
 	image = ImageGrab.grab()
-	WriteSampleFile(image, 'screen.png') # default
+	#WriteSampleFile(image, 'screen.png') # default
 	image.thumbnail(resize_to, Image.LANCZOS)
-	WriteSampleFile(image, 'screen_resized.png') # default
+	#WriteSampleFile(image, 'screen_resized.png') # default
 
 	image_matrix = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
 	data = np.asarray(image_matrix).tolist()
-	with open(directory + "raw_data.json", "w") as file:
-		file.write("".join(str(data)))
+	#with open(directory + "raw_data.json", "w") as file:
+	#	file.write("".join(str(data)))
 	return data, image
 
 if __name__ == '__main__':

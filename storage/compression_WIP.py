@@ -15,8 +15,8 @@ class list(list):
 
 def compress_image(data) -> str:
 	# DUMP
-	with open(os.path.dirname(os.path.realpath(__file__)) + "/dump0.json", "w") as file:
-		file.write("\n\n\n".join([json.dumps(data)]))
+	# with open(os.path.dirname(os.path.realpath(__file__)) + "/dump0.json", "w") as file:
+	# 	file.write("\n\n\n".join([json.dumps(data)]))
 	# variables
 	color_matrix = list()
 	pixel_array = []
@@ -52,8 +52,8 @@ def decompress_image(data : str) -> list:
 	directory = os.path.dirname(os.path.realpath(__file__))
 
 	# DUMP
-	with open(directory + "/dump1.json", "w") as file:
-		file.write("\n\n\n".join([SIZE_Y, SIZE_X, DIV_N, COLOR_MATRIX, PIXEL_ARRAY]))
+	# with open(directory + "/dump1.json", "w") as file:
+	# 	file.write("\n\n\n".join([SIZE_Y, SIZE_X, DIV_N, COLOR_MATRIX, PIXEL_ARRAY]))
 	# print(SIZE_Y, SIZE_X, DIV_N, COLOR_MATRIX, PIXEL_ARRAY)
 
 	# convert all color matrix strings to lists
@@ -66,8 +66,8 @@ def decompress_image(data : str) -> list:
 	# print(len(COLOR_MATRIX))
 
 	# DUMP
-	with open(directory + "/dump2.json", "w") as file:
-		file.write("\n\n\n".join([json.dumps(COLOR_MATRIX)]))
+	# with open(directory + "/dump2.json", "w") as file:
+	# 	file.write("\n\n\n".join([json.dumps(COLOR_MATRIX)]))
 
 	# convert compressed pixel list
 	# to uncompressed pixel list
@@ -78,8 +78,8 @@ def decompress_image(data : str) -> list:
 		raw_pixel_data.append(list.copy(COLOR_MATRIX[int(new_number)]))
 
 	# DUMP
-	with open(directory + "/dump3.json", "w") as file:
-		file.write("\n\n\n".join([SIZE_Y, SIZE_X, json.dumps(raw_pixel_data)]))
+	# with open(directory + "/dump3.json", "w") as file:
+	# 	file.write("\n\n\n".join([SIZE_Y, SIZE_X, json.dumps(raw_pixel_data)]))
 
 	# sort into rows/columns
 	SIZE_X = int(SIZE_X)
@@ -93,9 +93,9 @@ def decompress_image(data : str) -> list:
 
 	# DUMP
 	SIZE_Y = int(SIZE_Y)
-	print(len(fully_sorted), SIZE_Y, len(fully_sorted[1]), SIZE_X)
-	with open(directory + "/dump4.json", "w") as file:
-		file.write(json.dumps(raw_pixel_data))
+	# print(len(fully_sorted), SIZE_Y, len(fully_sorted[1]), SIZE_X)
+	# with open(directory + "/dump4.json", "w") as file:
+	# 	file.write(json.dumps(raw_pixel_data))
 
 	return fully_sorted
 
