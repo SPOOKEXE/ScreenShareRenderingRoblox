@@ -2,6 +2,7 @@
 local ReplicatedStorage = game:GetService('ReplicatedStorage')
 local HttpService = game:GetService('HttpService')
 
+local CompressionModule = require(ReplicatedStorage:WaitForChild('Compression'))
 local RemoteService = require(ReplicatedStorage:WaitForChild('RemoteService'))
 local ReplicateRemote = RemoteService:GetRemote('Replicate', 'RemoteEvent', false)
 
@@ -14,6 +15,8 @@ ReplicateRemote.OnClientEvent:Connect(function(Data)
 		return
 	end
 	Latest = Data.Timestamp
-	--local Uncompressed = Decompress(Data)
-	task.defer(ScreenModule.LoadPixels, HttpService:JSONDecode( Data.Data ))
+	print(#Data.Data)
+	local Uncompressed = CompressionModule.inflate(Data.Data)
+	print(#Uncompressed)
+	--task.defer(ScreenModule.LoadPixels,  Data.Data)
 end)

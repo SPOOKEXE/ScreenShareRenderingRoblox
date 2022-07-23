@@ -5,6 +5,7 @@ import _thread
 import time
 
 import screenshot
+from compression import compress
 
 # finish_key = '5e100"'
 # def recieve_all(connection):
@@ -34,10 +35,11 @@ class Network:
 	__threads = []
 	__hasSetup = False
 
-	# On incoming Data
+	# On Incoming Data
 	def __compileSendData(self):
 		# return dumped json string w/ data
 		data, _ = screenshot.Get()
+		data = compress(data)
 		# TODO: data compression + uncompression
 		return json.dumps({
 			"Timestamp": time.time(),
@@ -54,9 +56,9 @@ class Network:
 				returnData = self.__compileSendData()
 				response_headers = { 'Content-Type': 'application/json; encoding=utf8', 'Content-Length': len(returnData), 'Connection': 'close' }
 				response_headers_raw = ''.join('%s: %s\n' % (k, v) for k, v in response_headers.items())
-				conn.sendall('HTTP/1.1 200 OK'.encode())
-				conn.sendall(response_headers_raw.encode())
-				conn.sendall('\n'.encode()) # to separate headers from body
+				conn.send('HTTP/1.1 200 OK'.encode())
+				conn.send(response_headers_raw.encode())
+				conn.send('\n'.encode()) # to separate headers from body
 				conn.sendall(str(returnData).encode())
 				print("Close Connection")
 				time.sleep(3)

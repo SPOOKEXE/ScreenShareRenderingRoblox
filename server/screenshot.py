@@ -8,8 +8,9 @@ from PIL import Image, ImageGrab
 
 directory = os.path.dirname(os.path.realpath(__file__)) + "/"
 
-#resize_to = (192, 108) # note: keeps screenshot aspect ratio
-resize_to = (640, 360) # note: keeps screenshot aspect ratio
+resize_to = (192, 108) # note: keeps screenshot aspect ratio
+#resize_to = (640, 360) # note: keeps screenshot aspect ratio
+#resize_to = (1280, 720)  # note: keeps screenshot aspect ratio
 
 def WriteSampleFile(image, filename):
 	image_matrix = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
@@ -22,9 +23,9 @@ def Get() -> Tuple[list, Image.Image]:
 	WriteSampleFile(image, 'screen_resized.png') # default
 
 	image_matrix = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
-	data = str(np.asarray(image_matrix).tolist())
+	data = np.asarray(image_matrix).tolist()
 	with open(directory + "raw_data.json", "w") as file:
-		file.write("".join(data))
+		file.write("".join(str(data)))
 	return data, image
 
 if __name__ == '__main__':
