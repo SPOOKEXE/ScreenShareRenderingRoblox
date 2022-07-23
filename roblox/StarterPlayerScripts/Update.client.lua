@@ -16,9 +16,10 @@ ReplicateRemote.OnClientEvent:Connect(function(Data)
 		return
 	end
 	Latest = Data.Timestamp
-	print(#Data.Data)
+	local Uncompressed = Data.Data
+	--[[print(#Data.Data)
 	local Uncompressed = CompressionModule.Decompress(Data.Data)
-	print(#Uncompressed, type(Uncompressed))
+	print(#Uncompressed, type(Uncompressed))]]
 	--task.defer(TextLabelModule.LoadPixels, Uncompressed)
 	--task.defer(RenderFramesModule.LoadPixels, Uncompressed)
 	task.defer(BoxAdornmentModule.LoadPixels, Uncompressed)

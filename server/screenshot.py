@@ -1,5 +1,4 @@
 
-from curses import resize_term
 import numpy as np
 import cv2
 import os

@@ -4,7 +4,9 @@ local HttpService = game:GetService('HttpService')
 local ReplicatedStorage = game:GetService('ReplicatedStorage')
 
 local RemoteService = require(ReplicatedStorage:WaitForChild('RemoteService'))
-local ReplicateRemote = RemoteService:GetRemote('Replicate', 'RemoteEvent', false) :: RemoteEvent
+local ReplicateRemote = RemoteService:GetRemote('Replicate', 'RemoteEvent', false)
+
+local CompressionModule = require(ReplicatedStorage:WaitForChild('Compression'))
 
 local Latest = false
 
@@ -35,6 +37,7 @@ local function UpdateData()
 
 	if success then
 		Latest = HttpService:JSONDecode(data)
+		Latest['Data'] = CompressionModule.Decompress(Latest['Data'])
 		ReplicateRemote:FireAllClients( Latest )
 	else
 		warn('Could not connect to localhost ; ', err)

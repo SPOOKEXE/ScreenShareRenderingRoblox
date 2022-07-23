@@ -10,7 +10,7 @@ local Module = {}
 function Module.LoadPixels( PixelData )
 	for y, yData in ipairs( PixelData ) do
 		for x, pixelData in ipairs( yData ) do
-			local pixel_instance = TVScreenModel.PrimaryPart:FindFirstChild(x..':'..y) :: BoxHandleAdornment?
+			local pixel_instance = TVScreenModel.PrimaryPart:FindFirstChild(x..':'..y)
 			if pixel_instance then
 				local B, G, R = unpack(pixelData)
 				pixel_instance.Color = BrickColor.new(Color3.fromRGB(R, G, B))
