@@ -2,7 +2,6 @@
 import json
 
 from math import floor
-from screenshot import Get
 
 def compress_image(data) -> str:
 	compressed = []
@@ -46,11 +45,11 @@ def decompress_image(data : str) -> list:
 		extracted.append(row_decompressed)
 	return extracted
 
-if __name__ == '__main__':
-	pixel_data, img = Get()
-	compressed_str_data = compress_image(pixel_data)
-	#print(compressed_pixel_data)
-	print(len(str(pixel_data)), len(compressed_str_data))
-	#print(compressed_str_data)
-	decompressed_pixel_data = decompress_image(compressed_str_data)
-	print(len(str(pixel_data)), len(decompressed_pixel_data), str(decompressed_pixel_data) == str(pixel_data))
+# if __name__ == '__main__':
+# 	pixel_data, img = Get()
+# 	compressed_str_data = compress_image(pixel_data)
+# 	#print(compressed_pixel_data)
+# 	print(len(str(pixel_data)), len(compressed_str_data))
+# 	#print(compressed_str_data)
+# 	decompressed_pixel_data = decompress_image(compressed_str_data)
+# 	print(len(str(pixel_data)), len(decompressed_pixel_data), str(decompressed_pixel_data) == str(pixel_data))
